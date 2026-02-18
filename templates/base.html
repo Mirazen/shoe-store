@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Магазин обуви</title>
+</head>
+<body>
+    <header>
+        <h1>Магазин обуви</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'products:catalog' %}">Каталог</a></li>
+                <li><a href="{% url 'cart:cart' %}">Корзина</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'accounts:profile' %}">Профиль ({{ user.username }})</a></li>
+                    <li>
+                        <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
+                            {% csrf_token %}
+                            <button type="submit" style="background: none; border: none; padding: 0; cursor: pointer; color: blue;">Выйти</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'accounts:login' %}">Войти</a></li>
+                    <li><a href="{% url 'accounts:register' %}">Регистрация</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+    <footer>
+        <p>Обувь</p>
+    </footer>
+</body>
+</html>
