@@ -8,7 +8,8 @@ def view_cart(request):
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart)
     total = sum(item.get_total_price() for item in cart_items)
-    return render(request, "cart.html", {"products": cart_items, "total": total})
+
+    return render(request, "cart/cart.html", {"products": cart_items, "total": total})
 
 
 @login_required

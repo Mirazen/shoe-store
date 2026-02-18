@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Заказы</h1>
+    {% if user.role == 'admin' %}
+        <a href="{% url 'orders:order_create' %}">Создать заказ</a>
+    {% endif %}
+    {% if orders %}
+        <table border="1" cellpadding="10">
+            <thead>
+                <tr>
+                    <th>№ заказа</th>
+                    <th>Дата заказа</th>
+                    <th>Дата доставки</th>
+                    <th>Клиент</th>
+                    <th>Пункт выдачи</th>
+                    <th>Код получения</th>
+                    <th>Статус</th>
+                    {% if user.is_authenticated and user.role == 'admin' %}
+                        <th>Действия</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td>{{ order.order_number }}</td>
+                        <td>{{ order.order_date|default:"—" }}</td>
+                        <td>{{ order.delivery_date|default:"—" }}</td>
+                        <td>{{ order.customer.full_name|default:"—" }}</td>
+                        <td>{{ order.pickup_point.address|default:"—" }}</td>
+                        <td>{{ order.pickup_code }}</td>
+                        <td>{{ order.get_status_display }}</td>
+                        {% if user.is_authenticated and user.role == 'admin' %}
+                            <td>
+                                <a href="{% url 'orders:order_edit' order.id %}" class="btn btn-primary">Редактировать</a>
+                                <a href="{% url 'orders:order_delete' order.id %}" class="btn btn-primary">Удалить</a>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Заказов пока нет.</p>
+    {% endif %}
+
+    <p><a href="{% url 'products:catalog' %}">Вернуться в каталог</a></p>
+{% endblock %}

@@ -3,6 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Магазин обуви</title>
+    <style>
+        .discount-highlight {
+            background-color: #2E8B57;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .out-of-stock {
+            background-color: lightblue;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .product-card {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -10,9 +27,12 @@
         <nav>
             <ul>
                 <li><a href="{% url 'products:catalog' %}">Каталог</a></li>
-                <li><a href="{% url 'cart:cart' %}">Корзина</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'accounts:profile' %}">Профиль ({{ user.username }})</a></li>
+                    <li><a href="{% url 'cart:cart' %}">Корзина</a></li>
+                    {% if user.role == 'manager' or user.role == 'admin' %}
+                        <li><a href="{% url 'orders:order_list' %}">Заказы</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'accounts:profile' %}">Профиль ({{ user.full_name }})</a></li>
                     <li>
                         <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
                             {% csrf_token %}
@@ -21,7 +41,6 @@
                     </li>
                 {% else %}
                     <li><a href="{% url 'accounts:login' %}">Войти</a></li>
-                    <li><a href="{% url 'accounts:register' %}">Регистрация</a></li>
                 {% endif %}
             </ul>
         </nav>

@@ -30,6 +30,20 @@ class Product(models.Model):
     def __str__(self):
         return self.name
 
+    def get_discount_price(self):
+        if self.discount > 0:
+            return round(self.price * (100 - self.discount) / 100, 2)
+        return self.price
+
+    def has_discount(self):
+        return self.discount > 0
+
+    def has_large_discount(self):
+        return self.discount > 15
+
+    def is_out_of_stock(self):
+        return self.stock_quantity == 0
+
 
 class Provider(models.Model):
     name = models.CharField(max_length=100)

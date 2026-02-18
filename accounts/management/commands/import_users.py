@@ -34,7 +34,6 @@ class Command(BaseCommand):
 
             created_count = 0
             updated_count = 0
-            skipped_count = 0
 
             for row in reader:
                 # Пропускаем пустые строки

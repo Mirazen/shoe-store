@@ -4,12 +4,19 @@
 
 {% block content %}
 <h2>Профиль пользователя</h2>
-<p>Имя пользователя: {{ user.username }}</p>
+<p>ФИО: {{ user.full_name }}</p>
+<p>Роль: {{ user.get_role_display }}</p>
+<p>Email: {{ user.email }}</p>
 <p>Дата регистрации: {{ user.date_joined }}</p>
 
 <h3>Действия</h3>
 <ul>
     <li><a href="{% url 'accounts:password_change' %}">Сменить пароль</a></li>
-    <li><a href="{% url 'accounts:logout' %}">Выйти</a></li>
+    <li>
+        <form method="post" action="{% url 'accounts:logout' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit">Выйти</button>
+        </form>
+    </li>
 </ul>
 {% endblock %}

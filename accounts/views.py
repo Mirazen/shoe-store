@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic.edit import CreateView
 from django.contrib.auth.forms import UserCreationForm
@@ -13,3 +13,7 @@ class RegisterView(CreateView):
     template_name = "registration/register.html"
     form_class = UserCreationForm
     success_url = "/"
+
+
+def guest_login(request):
+    return redirect("products:catalog")

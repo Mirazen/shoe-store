@@ -5,7 +5,11 @@
 
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}
+        <label>
+            Количество:
+            <input type="number" name="quantity" value="1" min="1" required>
+        </label>
+        <br><br>
         <button type="submit">Добавить в корзину</button>
     </form>
 

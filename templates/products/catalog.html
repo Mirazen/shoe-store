@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+    <h1>Каталог товаров</h1>
+
+    {% if user.is_authenticated and user.role == 'admin' %}
+        <a href="{% url 'products:product_create' %}" class="btn">Создать товар</a>
+    {% endif %}
+
+    {% if user.is_authenticated and user.role == 'manager' or user.role == 'admin' %}
+        <form method="get">
+            {{ form.as_p }}
+            <button type="submit">Применить фильтры</button>
+            <a href="{% url 'products:catalog' %}">Сбросить</a>
+        </form>
+    {% endif %}
+    <div class="catalog">
+        {% for product in products %}
+            <div class="product-card {% if product.has_large_discount %}discount-highlight{% endif %} {% if product.is_out_of_stock %}out-of-stock{% endif %}">
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}" width="200">
+                {% else %}
+                    <img src="{% static 'images/picture.png' %}" alt="Нет фото" width="200">
+                {% endif %}
+                <h2>{{ product.name }}</h2>
+                <p>{{ product.description|truncatewords:20 }}</p>
+                
+                {% if product.has_discount %}
+                    <p>
+                        <span style="text-decoration: line-through; color: red;">{{ product.price }} руб.</span>
+                        <span style="color: black;">{{ product.get_discount_price }} руб.</span>
+                        (Скидка {{ product.discount }}%)
+                    </p>
+                {% else %}
+                    <p>Цена: {{ product.price }} руб.</p>
+                {% endif %}
+                
+                <p>Остаток: {{ product.stock_quantity }} шт.</p>
+                <p>Категория: {{ product.category.name }}</p>
+                <p>Производитель: {{ product.manufacturer.name }}</p>
+                <p>Поставщик: {{ product.provider.name }}</p>
+                
+                <a href="{% url 'products:add_to_cart' product.id %}" class="btn">Добавить в корзину</a>
+                {% if user.is_authenticated and user.role == 'admin' %}
+                    <a href="{% url 'products:product_edit' product.id %}" class="btn btn-primary">Редактировать</a>
+                    <a href="{% url 'products:product_delete' product.id %}" class="btn btn-primary">Удалить</a>
+                {% endif %}
+            </div>
+        {% empty %}
+            <p>Товары не найдены.</p>
+        {% endfor %}
+    </div>
+{% endblock %}
